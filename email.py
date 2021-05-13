@@ -1,12 +1,10 @@
-import getpass
-import smtplib
+import smtplib, getpass, random, string
 from email.mime.text import MIMEText
 
-print('--------------------------------------------------')
+print('\033[32m'+'--------------------------------------------------'+'\033[0;0m')
 print('        E-mail spammer!\n')
 print('If you use a google email\nyou need to allow less secure app access at\n\nhttps://myaccount.google.com/u/0/security?hl=pt:')
-print('--------------------------------------------------')
-
+print('\033[32m'+'--------------------------------------------------'+'\033[0;0m')
 
 # conexão com os servidores do google
 smtp_ssl_host = 'smtp.gmail.com'
@@ -18,29 +16,32 @@ password = getpass.getpass('Your password: ')
 mail_from = input('Destination e-mail: ')
 mail_to = [mail_from]
 
-mail_title = input('Title of e-mail: ')
-mail = input('Type the e-mail: ')
-try:
-    mail_amount = int(input('How many emails do you want to send: '))
+def randomword(length):
+   letters = string.ascii_lowercase
+   return ''.join(random.choice(letters) for i in range(length))
+   
 
-    i = 0
+amount = int(input('How many emails do you want to send: '))
 
-    while i <= mail_amount: 
-        # email que vai ser enviado
-        message = MIMEText(mail) # email 
-        message['subject'] = mail_title # título do e-mail
-        message['from'] = mail_from
-        message['to'] = ', '.join(mail_to)
+i = 1
 
-        # conectaremos de forma segura usando SSL
-        server = smtplib.SMTP_SSL(smtp_ssl_host, smtp_ssl_port)
+while i <= amount:
+   message = MIMEText(randomword(10))
+   message['subject'] = randomword(10)
+   message['from'] = mail_from
+   message['to'] = ', '.join(mail_to)
 
-        # fazer login nele
-        server.login(username, password)
-        server.sendmail(mail_to, mail_from, message.as_string())
-        server.quit()
+   # conectaremos de forma segura usando SSL
+   server = smtplib.SMTP_SSL(smtp_ssl_host, smtp_ssl_port)
 
-        i += 1
+   # fazer login nele
+   try:
+      server.login(username, password)
+      server.sendmail(mail_from, mail_to, message.as_string())
+      server.quit()
+   except smtplib.SMTPAuthenticationError:
+      print('\033[31m'+'Username or password invalid!'+'\033[0;0m')
+      break
 
-except ValueError:
-    print('Type only numbers!')
+
+   i += 1
