@@ -9,6 +9,7 @@ print('\033[32m'+'--------------------------------------------------'+'\033[0;0m
 # conexão com os servidores do google
 smtp_ssl_host = 'smtp.gmail.com'
 smtp_ssl_port = 465
+
 # username ou email para logar no servidor
 username = input('Type your e-mail: ')
 password = getpass.getpass('Your password: ')
